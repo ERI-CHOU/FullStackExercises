@@ -7,11 +7,11 @@ adds it to an array called notes and
 responds with a URL redirect to browser.
 end note
 server->browser: HTML-code
-browser->server: HTTP GET https://studies.cs.helsinki.fi/exampleapp/notes
-server->browser: HTML-code
 note over browser:
 browser starts to reload the Notes page
 end note
+browser->server: HTTP GET https://studies.cs.helsinki.fi/exampleapp/notes
+server->browser: HTML-code
 browser->server: HTTP GET https://studies.cs.helsinki.fi/exampleapp/main.css
 server->browser: main.css
 browser->server: HTTP GET https://studies.cs.helsinki.fi/exampleapp/main.js
