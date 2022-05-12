@@ -1,0 +1,9 @@
+title part0.6newnote4spa
+note over browser:
+browser executes the event handler to prevent the 
+default handling of form submit, rerender the note 
+list after add a new note to it, send a post request 
+along with the new note data to the server.
+end note
+browser->server: HTTP POST https://studies.cs.helsinki.fi/exampleapp/new_note_spa 
+server->browser: {"message":"note created"}
