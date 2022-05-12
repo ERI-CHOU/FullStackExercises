@@ -1,5 +1,10 @@
 title part0.4newnote
 
+note over browser:
+browser sends POST request along with
+the form data to the server.
+end note
+
 browser->server: HTTP POST https://studies.cs.helsinki.fi/exampleapp/new_note
 
 note over server:
