@@ -1,4 +1,4 @@
-function Header(props) {
+const Header = (props) => {
   return (
     <div> 
       <h1>{props.course}</h1>
@@ -6,7 +6,7 @@ function Header(props) {
   )
 }
 
-function Content(props) {
+const Content = (props) => {
   return (
     <div> 
       <Part part={props.part1} exercises={props.exercises1} />
@@ -16,7 +16,7 @@ function Content(props) {
   )
 }
 
-function Part(props) {
+const Part = (props) => {
   return (
     <> 
       <p>{props.part} {props.exercises}</p>
@@ -24,7 +24,7 @@ function Part(props) {
   )
 }
 
-function Total(props) {
+const Total = (props) => {
   return (
     <div> 
       <p>Number of exercises {props.exercises1 + props.exercises2 + props.exercises3}</p>
@@ -33,7 +33,7 @@ function Total(props) {
 }
 
 
-function App() {
+const App = () => {
   console.log('My cousrinfo exercise starts');
   const course = 'Half Stack application development';
   const part1 = 'Fundamentals of React';
