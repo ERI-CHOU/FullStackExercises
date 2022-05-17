@@ -1,9 +1,9 @@
 const Course = (props) => {
   return (
     <div>
-    <Header name={props.name} />
-    <Content parts={props.parts} />
-    <Total parts={props.parts} />
+    <Header name={props.course.name} />
+    <Content parts={props.course.parts} />
+    <Total parts={props.course.parts} />
   </div>
   )
 }
