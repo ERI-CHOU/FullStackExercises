@@ -24,7 +24,7 @@ const Countries = (props) => {
                 <ul>
                     {Object.entries(props.countries[0].languages).map(([key, value]) => <li key={key}>{value}</li>)}
                 </ul>
-                <img src={props.countries[0].flags.png}  />
+                <img src={props.countries[0].flags.png} alt="falg" />
             </div>
         )
     }
