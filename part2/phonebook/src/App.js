@@ -1,8 +1,8 @@
-import axios from 'axios'
 import { useState, useEffect } from 'react'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
+import personService from './services/persons'
 
 const App = () => {
   const [persons, setPersons] = useState([])
@@ -11,41 +11,39 @@ const App = () => {
   const [newFilter, setNewFilter] = useState('')
 
   useEffect(() => {
-    axios
-    .get('http://localhost:3001/persons')
-    .then(resp => {
-      setPersons(resp.data)
+    personService
+    .getAll()
+    .then(initialPersons => {
+      setPersons(initialPersons)
     })
   }, [])
 
-  const addPersons = (event) => {
-    event.preventDefault()
-    if(newName === ''){
+  const handlePersonSubmit = (event) => {
+    event.preventDefault()//prevent default event handler
+    if(newName === ''){//display error message to user when name is empty
       window.alert('Name cannot be empty!')
-    }else if(persons.filter(person => person.name === newName).length){
+    }else if(persons.filter(person => person.name === newName).length){//update person object when name is already in db.json
       const person = persons.find(p => p.name === newName)
       const changedPerson = {...person, number : newNumber}
-      axios.put(`http://localhost:3001/persons/${person.id}`, changedPerson).then(resp => {
-        setPersons(persons.map(person => person.name !== newName ? person : resp.data))
+      personService.update(person.id, changedPerson)
+      .then(returnedPerson => {
+        setPersons(persons.map(person => person.name !== newName ? person : returnedPerson))
         setNewName('')
         setNewNumber('')
       })
-    }else{
+    }else{//create new person object
       const personObject = {
         name: newName,
         number: newNumber
       }
-      axios
-      .post('http://localhost:3001/persons', personObject)
-      .then(resp => {
-        setPersons(persons.concat(resp.data))
+      personService.create(personObject)
+      .then(returnedPerson => {
+        setPersons(persons.concat(returnedPerson))
         setNewName('')
         setNewNumber('')
       })
     }
   }
-
-
 
   const handleNameChange = (event) => setNewName(event.target.value)
 
@@ -60,7 +58,7 @@ const App = () => {
       <h2>Phonebook</h2>
       <Filter value={newFilter} onChange={handleFilterChange} />
       <h2>add a new</h2>
-      <PersonForm onSubmit={addPersons} name={newName} number={newNumber} onNameChange={handleNameChange} onNumberChange={handleNumberChange} />
+      <PersonForm onSubmit={handlePersonSubmit} name={newName} number={newNumber} onNameChange={handleNameChange} onNumberChange={handleNumberChange} />
       <h2>Numbers</h2>
       <Persons value={personsToShow} />
     </div>
