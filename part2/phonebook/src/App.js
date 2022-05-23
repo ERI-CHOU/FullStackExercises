@@ -10,7 +10,7 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [newFilter, setNewFilter] = useState('')
-  const [errorMessage, setErrorMessage] = useState(null)
+  const [infoMessage, setInfoMessage] = useState(null)
 
   useEffect(() => {
     personService
@@ -33,6 +33,10 @@ const App = () => {
           setPersons(persons.map(person => person.name !== newName ? person : returnedPerson))
           setNewName('')
           setNewNumber('')
+          setInfoMessage(`Changed ${newName}'s number`)
+          setTimeout(() => {
+            setInfoMessage(null)
+          }, 4000)
       })}
     }else{//otherwise, create a new person object 
       const personObject = {
@@ -44,9 +48,9 @@ const App = () => {
         setPersons(persons.concat(returnedPerson))
         setNewName('')
         setNewNumber('')
-        setErrorMessage(`Added ${newName}`)
+        setInfoMessage(`Added ${newName}`)
         setTimeout(() => {
-          setErrorMessage(null)
+          setInfoMessage(null)
         }, 4000)
       })
     }
@@ -75,7 +79,7 @@ const App = () => {
   return (
     <div>
       <h1>Phonebook</h1>
-      <Notification message={errorMessage} />
+      <Notification message={infoMessage} />
       <Filter value={newFilter} onChange={handleFilterChange} />
       <h1>add a new</h1>
       <PersonForm onSubmit={handlePersonSubmit} name={newName} number={newNumber} onNameChange={handleNameChange} onNumberChange={handleNumberChange} />
