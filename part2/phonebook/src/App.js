@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
-import Persons from './components/Persons'
+import Person from './components/Person'
 import personService from './services/persons'
 
 const App = () => {
@@ -20,9 +20,9 @@ const App = () => {
 
   const handlePersonSubmit = (event) => {
     event.preventDefault()//prevent default event handler
-    if(newName === ''){//display error message to user when name is empty
+    if(newName === ''){//display error message to user when the name is empty
       window.alert('Name cannot be empty!')
-    }else if(persons.filter(person => person.name === newName).length){//update person object when name is already in db.json
+    }else if(persons.filter(person => person.name === newName).length){//update person object when the name is already in db.json
       const person = persons.find(p => p.name === newName)
       const changedPerson = {...person, number : newNumber}
       personService.update(person.id, changedPerson)
@@ -31,7 +31,7 @@ const App = () => {
         setNewName('')
         setNewNumber('')
       })
-    }else{//create new person object
+    }else{//otherwise, create a new person object 
       const personObject = {
         name: newName,
         number: newNumber
@@ -41,6 +41,18 @@ const App = () => {
         setPersons(persons.concat(returnedPerson))
         setNewName('')
         setNewNumber('')
+      })
+    }
+  }
+
+  const handlePersonDelete = (name) => {
+    if(window.confirm(`Delete  ${name}?`)){
+      const person = persons.find(p => p.name === name)
+      const changedPerson = {...person, number : newNumber}
+      personService.deleteObj(person.id)
+      .then((resp) => {
+        setPersons(persons.filter(p => p.id !== person.id))
+        console.log(resp)
       })
     }
   }
@@ -60,7 +72,9 @@ const App = () => {
       <h2>add a new</h2>
       <PersonForm onSubmit={handlePersonSubmit} name={newName} number={newNumber} onNameChange={handleNameChange} onNumberChange={handleNumberChange} />
       <h2>Numbers</h2>
-      <Persons value={personsToShow} />
+      <ul>
+        {personsToShow.map(person => <Person key={person.name} person={person} handleDeleteClick={() => handlePersonDelete(person.name)}/>)} 
+      </ul>
     </div>
   )
 }

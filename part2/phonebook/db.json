@@ -6,11 +6,6 @@
       "id": 1
     },
     {
-      "name": "Ada Lovelace",
-      "number": "777777777",
-      "id": 2
-    },
-    {
       "name": "Dan Abramov",
       "number": "12-43-234345",
       "id": 3
@@ -21,14 +16,9 @@
       "id": 4
     },
     {
-      "name": "cccccccccc",
-      "number": "1111111111",
+      "name": "fffffffff",
+      "number": "111111111",
       "id": 5
-    },
-    {
-      "name": "yyyyyy",
-      "number": "22222222",
-      "id": 6
     }
   ]
 }
