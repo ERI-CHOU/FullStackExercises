@@ -23,14 +23,15 @@ const App = () => {
     if(newName === ''){//display error message to user when the name is empty
       window.alert('Name cannot be empty!')
     }else if(persons.filter(person => person.name === newName).length){//update person object when the name is already in db.json
-      const person = persons.find(p => p.name === newName)
-      const changedPerson = {...person, number : newNumber}
-      personService.update(person.id, changedPerson)
-      .then(returnedPerson => {
-        setPersons(persons.map(person => person.name !== newName ? person : returnedPerson))
-        setNewName('')
-        setNewNumber('')
-      })
+      if(window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)){
+        const person = persons.find(p => p.name === newName)
+        const changedPerson = {...person, number : newNumber}
+        personService.update(person.id, changedPerson)
+        .then(returnedPerson => {
+          setPersons(persons.map(person => person.name !== newName ? person : returnedPerson))
+          setNewName('')
+          setNewNumber('')
+      })}
     }else{//otherwise, create a new person object 
       const personObject = {
         name: newName,
