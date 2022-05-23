@@ -3,12 +3,14 @@ import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Person from './components/Person'
 import personService from './services/persons'
+import Notification from './components/Notification'
 
 const App = () => {
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [newFilter, setNewFilter] = useState('')
+  const [errorMessage, setErrorMessage] = useState(null)
 
   useEffect(() => {
     personService
@@ -42,6 +44,10 @@ const App = () => {
         setPersons(persons.concat(returnedPerson))
         setNewName('')
         setNewNumber('')
+        setErrorMessage(`Added ${newName}`)
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 4000)
       })
     }
   }
@@ -68,11 +74,12 @@ const App = () => {
 
   return (
     <div>
-      <h2>Phonebook</h2>
+      <h1>Phonebook</h1>
+      <Notification message={errorMessage} />
       <Filter value={newFilter} onChange={handleFilterChange} />
-      <h2>add a new</h2>
+      <h1>add a new</h1>
       <PersonForm onSubmit={handlePersonSubmit} name={newName} number={newNumber} onNameChange={handleNameChange} onNumberChange={handleNumberChange} />
-      <h2>Numbers</h2>
+      <h1>Numbers</h1>
       <ul>
         {personsToShow.map(person => <Person key={person.name} person={person} handleDeleteClick={() => handlePersonDelete(person.name)}/>)} 
       </ul>
