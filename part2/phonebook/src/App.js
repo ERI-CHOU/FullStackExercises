@@ -23,17 +23,29 @@ const App = () => {
     if(newName === ''){
       window.alert('Name cannot be empty!')
     }else if(persons.filter(person => person.name === newName).length){
-      window.alert(`${newName} is already added to phonebook`)
+      const person = persons.find(p => p.name === newName)
+      const changedPerson = {...person, number : newNumber}
+      axios.put(`http://localhost:3001/persons/${person.id}`, changedPerson).then(resp => {
+        setPersons(persons.map(person => person.name !== newName ? person : resp.data))
+        setNewName('')
+        setNewNumber('')
+      })
     }else{
       const personObject = {
         name: newName,
         number: newNumber
       }
-      setPersons(persons.concat(personObject))
-      setNewName('')
-      setNewNumber('')
+      axios
+      .post('http://localhost:3001/persons', personObject)
+      .then(resp => {
+        setPersons(persons.concat(resp.data))
+        setNewName('')
+        setNewNumber('')
+      })
     }
   }
+
+
 
   const handleNameChange = (event) => setNewName(event.target.value)
 
