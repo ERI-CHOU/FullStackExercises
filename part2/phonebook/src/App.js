@@ -11,6 +11,7 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('')
   const [newFilter, setNewFilter] = useState('')
   const [infoMessage, setInfoMessage] = useState(null)
+  const [errorMessage, setErrorMessage] = useState(null)
 
   useEffect(() => {
     personService
@@ -23,7 +24,7 @@ const App = () => {
   const handlePersonSubmit = (event) => {
     event.preventDefault()//prevent default event handler
     if(newName === ''){//display error message to user when the name is empty
-      window.alert('Name cannot be empty!')
+      handleErrorMessage('Name cannot be empty!')
     }else if(persons.filter(person => person.name === newName).length){//update person object when the name is already in db.json
       if(window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)){
         const person = persons.find(p => p.name === newName)
@@ -33,11 +34,12 @@ const App = () => {
           setPersons(persons.map(person => person.name !== newName ? person : returnedPerson))
           setNewName('')
           setNewNumber('')
-          setInfoMessage(`Changed ${newName}'s number`)
-          setTimeout(() => {
-            setInfoMessage(null)
-          }, 4000)
-      })}
+          handleInfoMessage(`Changed ${newName}'s number`)
+        })
+        .catch((error) => {
+          handleErrorMessage(`Information of ${newName} has already been removed from server`)
+         })
+      }
     }else{//otherwise, create a new person object 
       const personObject = {
         name: newName,
@@ -48,10 +50,7 @@ const App = () => {
         setPersons(persons.concat(returnedPerson))
         setNewName('')
         setNewNumber('')
-        setInfoMessage(`Added ${newName}`)
-        setTimeout(() => {
-          setInfoMessage(null)
-        }, 4000)
+        handleInfoMessage(`Added ${newName}`)
       })
     }
   }
@@ -59,11 +58,13 @@ const App = () => {
   const handlePersonDelete = (name) => {
     if(window.confirm(`Delete  ${name}?`)){
       const person = persons.find(p => p.name === name)
-      const changedPerson = {...person, number : newNumber}
       personService.deleteObj(person.id)
       .then((resp) => {
         setPersons(persons.filter(p => p.id !== person.id))
-        console.log(resp)
+        handleInfoMessage(`Deleted ${name}`)
+      })
+      .catch(() => {
+        handleInfoMessage(`Information of ${newName} has already been removed from server`)
       })
     }
   }
@@ -76,10 +77,25 @@ const App = () => {
 
   const personsToShow = newFilter.length ? persons.filter(person => person.name.toLowerCase().includes(newFilter.toLowerCase())) : persons
 
+  const handleInfoMessage = (msg) => {
+    setInfoMessage(msg)
+    setTimeout(() => {
+      setInfoMessage(null)
+    }, 4000)
+  }
+
+  const handleErrorMessage = (msg) => {
+    setErrorMessage(msg)
+    setTimeout(() => {
+      setErrorMessage(null)
+    }, 4000)
+  }
+
   return (
     <div>
       <h1>Phonebook</h1>
-      <Notification message={infoMessage} />
+      <Notification message={infoMessage} cName="info" />
+      <Notification message={errorMessage} cName="error" />
       <Filter value={newFilter} onChange={handleFilterChange} />
       <h1>add a new</h1>
       <PersonForm onSubmit={handlePersonSubmit} name={newName} number={newNumber} onNameChange={handleNameChange} onNumberChange={handleNumberChange} />
